@@ -1,0 +1,7 @@
+#zabbix-server安装配置文件
+#MySQL数据库root初始密码
+zabbix_version=3.0.8
+#配置MySQL中root的密码
+mysql_pass=123456
+#zabbix_server的IP地址
+ip_addr=172.16.0.108
