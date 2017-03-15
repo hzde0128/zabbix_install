@@ -137,7 +137,7 @@ echo "zabbix-Database name:zabbix/User:zabbix/Password:zabbix"
 cp $CURRENT_DIR/zabbix-${zabbix_version}.tar.gz /var/www/html/zabbix
 if [ $listen_port -eq 80 ];then
     echo "打开http://$ip_addr/zabbix，进行下一步的配置"
-elif [ $? -eq 0 ];then
+else
     echo "打开http://$ip_addr:$listen_port/zabbix，进行下一步的配置"
 fi
 echo "Web页面登录用户名:Admin密码:zabbix"
