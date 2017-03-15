@@ -116,7 +116,7 @@ sed -i '/;always_populate_raw_post_data = -1/a\always_populate_raw_post_data = -
 sed -i '/;date.timezone =/a\date.timezone = PRC' /etc/php.ini
 
 echo "配置apache"
-sed -i '/#ServerName www.example.com:80/a\ServerName zabbix-server' /etc/httpd/conf/httpd.conf 
+sed -i '/#ServerName www.example.com:80/a\ServerName zabbix-server' /etc/httpd/conf/httpd.conf
 if [ $listen_port -ne 80 ];then
     sed -i '/Listen 80/Listen $listen_port/' /etc/httpd/conf/httpd.conf
 fi
@@ -139,8 +139,5 @@ if [ $listen_port -eq 80 ];then
     echo "打开http://$ip_addr/zabbix，进行下一步的配置"
 elif [ $? -eq 0 ];then
     echo "打开http://$ip_addr:$listen_port/zabbix，进行下一步的配置"
-fi
-else
-    echo "
 fi
 echo "Web页面登录用户名:Admin密码:zabbix"
