@@ -5,3 +5,5 @@ zabbix_version=3.0.8
 mysql_pass=123456
 #zabbix_server的IP地址
 ip_addr=172.16.0.108
+# htttpd端口
+listen_port=80

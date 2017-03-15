@@ -65,9 +65,6 @@ cp -r $CURRENT_DIR/zabbix-${zabbix_version}/frontends/php/* /var/www/html/zabbix
 if [ -e $CURRENT_DIR/simkai.ttf ];then
     cp $CURRENT_DIR/simkai.ttf /var/www/html/zabbix/fonts
 fi
-if [ $? -eq 0 ];then
-    mysql -uroot -p${mysql_pass} zabbix -e "update users set lang='zh_CN' where alias='Admin';"
-fi
 sed -i "s/DejaVuSans/simkai/g" /var/www/html/zabbix/include/defines.inc.php
 
 echo "创建zabbix数据库配置文档"
@@ -96,6 +93,9 @@ cd $CURRENT_DIR/zabbix-${zabbix_version}
 mysql -uzabbix -pzabbix zabbix < database/mysql/schema.sql
 mysql -uzabbix -pzabbix zabbix < database/mysql/images.sql
 mysql -uzabbix -pzabbix zabbix < database/mysql/data.sql
+if [ -e /var/www/html/zabbix/fonts/simkai.ttf ];then
+    mysql -uroot -p${mysql_pass} zabbix -e "update users set lang='zh_CN' where alias='Admin';"
+fi
 
 echo "设置开机自启动"
 cp $CURRENT_DIR/zabbix-${zabbix_version}/misc/init.d/tru64/zabbix_agentd /etc/init.d/
@@ -117,6 +117,9 @@ sed -i '/;date.timezone =/a\date.timezone = PRC' /etc/php.ini
 
 echo "配置apache"
 sed -i '/#ServerName www.example.com:80/a\ServerName zabbix-server' /etc/httpd/conf/httpd.conf 
+if [ $listen_port -ne 80 ];then
+    sed -i '/Listen 80/Listen $listen_port/' /etc/httpd/conf/httpd.conf
+fi
 if [ $release = 7 ];then
     systemctl enable httpd.service
     systemctl start httpd.service
@@ -132,5 +135,12 @@ echo "启动zabbix"
 /usr/local/zabbix/sbin/zabbix_java/startup.sh
 echo "zabbix-Database name:zabbix/User:zabbix/Password:zabbix"
 cp $CURRENT_DIR/zabbix-${zabbix_version}.tar.gz /var/www/html/zabbix
-echo "打开http://$ip_addr/zabbix，进行下一步的配置"
+if [ $listen_port -eq 80 ];then
+    echo "打开http://$ip_addr/zabbix，进行下一步的配置"
+elif [ $? -eq 0 ];then
+    echo "打开http://$ip_addr:$listen_port/zabbix，进行下一步的配置"
+fi
+else
+    echo "
+fi
 echo "Web页面登录用户名:Admin密码:zabbix"
