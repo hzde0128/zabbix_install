@@ -3,6 +3,10 @@
 # Date: 2017-03-14
 # Email:hzde0128@live.cn
 CURRENT_DIR=$(dirname $(readlink -f $0))
+if [ `id -u` -ne 0 ];then
+	echo "请使用root身份运行"
+	exit 8
+fi
 if [ ! -e $CURRENT_DIR/installrc ];then
     echo "缺少配置文件"
     exit 7
